@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.*;
@@ -49,6 +50,11 @@ public final class WrapperPaper implements VersionWrapper {
     @Override
     public void sendPacketCloseWindow(Player player, int containerId) {
         toNMS(player).connection.send(new ClientboundContainerClosePacket(containerId));
+    }
+
+    @Override
+    public void sendPacketExperienceChange(Player player, int experienceLevel) {
+        toNMS(player).connection.send(new ClientboundSetExperiencePacket(0f, 0, experienceLevel));
     }
 
     @Override

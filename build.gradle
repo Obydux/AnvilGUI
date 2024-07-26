@@ -17,7 +17,7 @@ subprojects {
 allprojects {
     apply plugin: 'java-library'
     group = 'net.wesjd'
-    version = '1.9.5-SNAPSHOT'
+    version = '2.0.0-SNAPSHOT'
 
 
     apply plugin: 'com.diffplug.spotless'
@@ -43,6 +43,9 @@ allprojects {
         maven {
             url = uri('https://repo.papermc.io/repository/maven-public/')
         }
+        maven {
+            url = uri('https://repo.opencollab.dev/main/')
+        }
     }
 
     apply plugin: 'maven-publish'
@@ -50,7 +53,11 @@ allprojects {
         publications {
             "$project.name"(MavenPublication) {
                 groupId project.group
-                artifactId project.name
+                if ("$project.name" == "anvilgui") {
+                    artifactId "${project.name}"
+                } else {
+                    artifactId "anvilgui-${project.name}"
+                }
                 version project.version
                 from components.java
             }
