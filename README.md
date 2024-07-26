@@ -21,7 +21,7 @@ AnvilGUI requires the usage of Maven or a Maven compatible build system.
 <dependency>
     <groupId>net.wesjd</groupId>
     <artifactId>anvilgui</artifactId>
-    <version>1.9.3-SNAPSHOT</version>
+    <version>1.10.0-SNAPSHOT</version>
 </dependency>
 
 <repository>
@@ -38,7 +38,7 @@ to prevent conflicts with other plugins. Here is an example of how to relocate t
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
-            <version>${shade.version}</version> <!-- The version must be at least 3.3.0 -->
+            <version>${shade.version}</version> <!-- The version must be at least 3.5.0 -->
             <executions>
                 <execution>
                     <phase>package</phase>
@@ -158,6 +158,13 @@ Useful for situations like password input to play.
 builder.preventClose();
 ```
 
+#### `geyserCompat()`
+This toggles compatibility with Geyser software, specifically being able to use AnvilGUI with 0 experience level on Bedrock.
+Enabled by default.
+```java
+builder.geyserCompat();
+```
+
 #### `text(String)`
 Takes a `String` that contains what the initial text in the renaming field should be set to.
 If `itemLeft` is provided, then the display name is set to the provided text. If no `itemLeft`
@@ -248,7 +255,7 @@ new AnvilGUI.Builder()
 
 
 ## Development
-We use Maven to handle our dependencies. Run `mvn clean install` using Java 17 to build the project.
+We use Maven to handle our dependencies. Run `mvn clean install` using Java 21 to build the project.
 
 ### Spotless
 The project utilizes the [Spotless Maven Plugin](https://github.com/diffplug/spotless/tree/main/plugin-maven) to

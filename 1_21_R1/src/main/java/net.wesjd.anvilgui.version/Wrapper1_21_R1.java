@@ -1,6 +1,8 @@
 package net.wesjd.anvilgui.version;
 
 import net.minecraft.core.BlockPosition;
+import net.minecraft.core.IRegistryCustom;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
 import net.minecraft.network.protocol.game.PacketPlayOutExperience;
@@ -9,18 +11,13 @@ import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.*;
-import net.wesjd.anvilgui.version.special.AnvilContainer1_19_1_R1;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public final class Wrapper1_19_R1 implements VersionWrapper {
-    private final boolean IS_ONE_NINETEEN_ONE = Bukkit.getBukkitVersion().contains("1.19.1")
-            || Bukkit.getBukkitVersion().contains("1.19.2");
-
+public final class Wrapper1_21_R1 implements VersionWrapper {
     private int getRealNextContainerId(Player player) {
         return toNMS(player).nextContainerCounter();
     }
@@ -37,41 +34,38 @@ public final class Wrapper1_19_R1 implements VersionWrapper {
 
     @Override
     public int getNextContainerId(Player player, AnvilContainerWrapper container) {
-        if (IS_ONE_NINETEEN_ONE) {
-            return ((AnvilContainer1_19_1_R1) container).getContainerId();
-        }
         return ((AnvilContainer) container).getContainerId();
     }
 
     @Override
     public void handleInventoryCloseEvent(Player player) {
         CraftEventFactory.handleInventoryCloseEvent(toNMS(player));
-        toNMS(player).r(); // r -> doCloseContainer
+        toNMS(player).s(); // s -> doCloseContainer
     }
 
     @Override
     public void sendPacketOpenWindow(Player player, int containerId, Object inventoryTitle) {
-        toNMS(player).b.a(new PacketPlayOutOpenWindow(containerId, Containers.h, (IChatBaseComponent) inventoryTitle));
+        toNMS(player).c.b(new PacketPlayOutOpenWindow(containerId, Containers.i, (IChatBaseComponent) inventoryTitle));
     }
 
     @Override
     public void sendPacketCloseWindow(Player player, int containerId) {
-        toNMS(player).b.a(new PacketPlayOutCloseWindow(containerId));
+        toNMS(player).c.b(new PacketPlayOutCloseWindow(containerId));
     }
 
     @Override
     public void sendPacketExperienceChange(Player player, int experienceLevel) {
-        toNMS(player).b.a(new PacketPlayOutExperience(0f, 0, experienceLevel));
+        toNMS(player).c.b(new PacketPlayOutExperience(0f, 0, experienceLevel));
     }
 
     @Override
     public void setActiveContainerDefault(Player player) {
-        toNMS(player).bU = toNMS(player).bT;
+        toNMS(player).cd = toNMS(player).cc; // cb -> containerMenu, ca -> inventoryMenu
     }
 
     @Override
     public void setActiveContainer(Player player, AnvilContainerWrapper container) {
-        toNMS(player).bU = (Container) container;
+        toNMS(player).cd = (Container) container;
     }
 
     @Override
@@ -84,49 +78,46 @@ public final class Wrapper1_19_R1 implements VersionWrapper {
 
     @Override
     public AnvilContainerWrapper newContainerAnvil(Player player, Object title) {
-        if (IS_ONE_NINETEEN_ONE) {
-            return new AnvilContainer1_19_1_R1(player, getRealNextContainerId(player), (IChatBaseComponent) title);
-        }
         return new AnvilContainer(player, getRealNextContainerId(player), (IChatBaseComponent) title);
     }
 
     @Override
     public Object literalChatComponent(String content) {
-        return IChatBaseComponent.b(content);
+        return IChatBaseComponent.b(content); // IChatBaseComponent.b -> Component.literal
     }
 
     @Override
     public Object jsonChatComponent(String json) {
-        return IChatBaseComponent.ChatSerializer.a(json);
+        return IChatBaseComponent.ChatSerializer.a(json, IRegistryCustom.b);
     }
 
     private static class AnvilContainer extends ContainerAnvil implements AnvilContainerWrapper {
         public AnvilContainer(Player player, int containerId, IChatBaseComponent guiTitle) {
             super(
                     containerId,
-                    ((CraftPlayer) player).getHandle().fB(),
+                    ((CraftPlayer) player).getHandle().fY(),
                     ContainerAccess.a(((CraftWorld) player.getWorld()).getHandle(), new BlockPosition(0, 0, 0)));
             this.checkReachable = false;
             setTitle(guiTitle);
         }
 
         @Override
-        public void l() {
+        public void m() {
             // If the output is empty copy the left input into the output
-            Slot output = this.b(2);
-            if (!output.f()) {
-                output.e(this.b(0).e().o());
+            Slot output = this.b(2); // b -> getSlot
+            if (!output.h()) { // h -> hasItem
+                output.f(this.b(0).g().s()); // f -> set, g -> getItem, s -> copy
             }
 
-            this.w.a(0);
+            this.w.a(0); // w -> cost, a -> set
 
             // Sync to the client
-            this.b();
-            this.d();
+            this.b(); // b -> sendAllDataToRemote
+            this.d(); // d -> broadcastChanges
         }
 
         @Override
-        public void b(EntityHuman player) {}
+        public void a(EntityHuman player) {}
 
         @Override
         protected void a(EntityHuman player, IInventory container) {}
@@ -144,8 +135,12 @@ public final class Wrapper1_19_R1 implements VersionWrapper {
         public void setRenameText(String text) {
             // If an item is present in the left input slot change its hover name to the literal text.
             Slot inputLeft = b(0);
-            if (inputLeft.f()) {
-                inputLeft.e().a(IChatBaseComponent.b(text));
+            if (inputLeft.h()) {
+                inputLeft
+                        .g()
+                        .b(
+                                DataComponents.g,
+                                IChatBaseComponent.b(text)); // DataComponents.g -> DataComponents.CUSTOM_NAME
             }
         }
 
