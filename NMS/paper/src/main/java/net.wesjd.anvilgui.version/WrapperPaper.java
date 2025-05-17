@@ -51,7 +51,8 @@ public final class WrapperPaper implements VersionWrapper {
             Method method = null;
 
             try {
-                method = CraftEventFactory.class.getMethod("handleInventoryCloseEvent", net.minecraft.world.entity.player.Player.class);
+                method = CraftEventFactory.class.getMethod(
+                        "handleInventoryCloseEvent", net.minecraft.world.entity.player.Player.class);
             } catch (NoSuchMethodException ex) {
                 throw new RuntimeException(ex);
             }
