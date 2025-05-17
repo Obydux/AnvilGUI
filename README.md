@@ -1,4 +1,10 @@
 # AnvilGUI [![Build Status](https://ci.codemc.io/job/WesJD/job/AnvilGUI/badge/icon)](https://ci.codemc.io/job/WesJD/job/AnvilGUI/)
+
+> Fork of AnvilGUI to use the [paperweight-userdev](https://docs.papermc.io/paper/dev/userdev/) gradle plugin in order to
+provide a mojang-mapped class file for paper, while supporting legacy obfuscated mappings (spigot).
+The use of mojang mappings will make this dependency potentially work on future mc versions, since oftentimes there are
+no breaking changes in the mc code.
+
 AnvilGUI is a library to capture user input in Minecraft through an anvil inventory. Anvil inventories within the realm
 of the Minecraft / Bukkit / Spigot / Paper API are extremely finnicky and ultimately don't support the ability to use them fully for
 the task of user input. As a result, the only way to achieve user input with an anvil inventory requires interaction with obfuscated,
@@ -13,19 +19,19 @@ If you are a developer, submit a pull request adding a wrapper module for your v
 on the issues tab.
 
 ## Usage
+AnvilGUI requires the usage of Maven/Gradle.
 
 ### As a dependency
-
-AnvilGUI requires the usage of Maven or a Maven compatible build system.
+#### Maven
 ```xml
 <dependency>
     <groupId>net.wesjd</groupId>
     <artifactId>anvilgui</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>2.0.3-SNAPSHOT</version>
 </dependency>
 
 <repository>
-    <id>space-snapshots</id>
+    <id>spaceio-snapshots</id>
     <url>https://repo.spaceio.xyz/repository/maven-snapshots/</url>
 </repository>
 ```
@@ -70,6 +76,31 @@ to prevent conflicts with other plugins. Here is an example of how to relocate t
 ```
 Note: In order to solve `<minimizeJar>` removing AnvilGUI `VerionWrapper`s from the final jar and making the library unusable,
 ensure that your `<filters>` section contains the example `<filter>` as seen above.
+
+#### Gradle
+```groovy
+repositories {
+    maven {
+        name = 'spaceio-snapshots'
+        url = 'https://repo.spaceio.xyz/repository/maven-snapshots/'
+    }
+}
+
+dependencies {
+    implementation 'net.wesjd:anvilgui:2.0.3-SNAPSHOT'
+}
+
+```
+
+```groovy
+plugins {
+    id 'com.gradleup.shadow' version '9.0.0-beta13'
+}
+
+shadowJar {
+    relocate 'net.wesjd.anvilgui', '[YOUR_PLUGIN_PACKAGE].anvilgui' // Replace [YOUR_PLUGIN_PACKAGE] with your namespace
+}
+```
 
 ### In your plugin
 
@@ -255,7 +286,7 @@ new AnvilGUI.Builder()
 
 
 ## Development
-We use Maven to handle our dependencies. Run `mvn clean install` using Java 21 to build the project.
+We use Gradle to handle our dependencies. Run `./gradlew build` using Java 21 to build the project.
 
 ### Spotless
 The project utilizes the [Spotless Maven Plugin](https://github.com/diffplug/spotless/tree/main/plugin-maven) to
