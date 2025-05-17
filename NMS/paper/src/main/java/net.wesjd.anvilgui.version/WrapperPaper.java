@@ -1,5 +1,7 @@
 package net.wesjd.anvilgui.version;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
@@ -14,6 +16,7 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 public final class WrapperPaper implements VersionWrapper {
@@ -37,7 +40,27 @@ public final class WrapperPaper implements VersionWrapper {
 
     @Override
     public void handleInventoryCloseEvent(Player player) {
-        CraftEventFactory.handleInventoryCloseEvent(toNMS(player));
+        try {
+            Method method = CraftEventFactory.class.getMethod(
+                    "handleInventoryCloseEvent",
+                    net.minecraft.world.entity.player.Player.class,
+                    InventoryCloseEvent.Reason.class);
+            method.invoke(null, toNMS(player), InventoryCloseEvent.Reason.PLUGIN);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            // Fallback to old signature
+            Method method = null;
+
+            try {
+                method = CraftEventFactory.class.getMethod("handleInventoryCloseEvent", net.minecraft.world.entity.player.Player.class);
+            } catch (NoSuchMethodException ex) {
+                throw new RuntimeException(ex);
+            }
+            try {
+                method.invoke(null, toNMS(player));
+            } catch (IllegalAccessException | InvocationTargetException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
         toNMS(player).doCloseContainer();
     }
 
