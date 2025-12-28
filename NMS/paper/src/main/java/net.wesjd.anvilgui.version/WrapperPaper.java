@@ -3,7 +3,6 @@ package net.wesjd.anvilgui.version;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
@@ -15,6 +14,7 @@ import net.minecraft.world.inventory.*;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -111,7 +111,7 @@ public final class WrapperPaper implements VersionWrapper {
 
     @Override
     public Object jsonChatComponent(String json) {
-        return Component.Serializer.fromJson(json, RegistryAccess.EMPTY);
+        return CraftChatMessage.fromJSON(json);
     }
 
     private static class AnvilContainer extends AnvilMenu implements AnvilContainerWrapper {
