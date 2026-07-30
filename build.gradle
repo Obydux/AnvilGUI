@@ -2,8 +2,8 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'idea'
-    id "com.diffplug.spotless" version "6.25.0"
-    id 'com.gradleup.shadow' version '9.0.0-beta9'
+    id "com.diffplug.spotless" version "8.9.0"
+    id 'com.gradleup.shadow' version '9.6.1'
 }
 
 subprojects {
@@ -92,11 +92,12 @@ java {
 }
 
 // Java versions
-// api, abstraction   ^= java 8
-// 1_7_R4 .. 1_16_R3  ^= java 8
-// 1_17_R1            ^= java 16
-// 1_18_R1 .. 1_20_R3 ^= java 17
-// 1_20_R4, paper     ^= java 21
+// api, abstraction             ^= java 8
+// 1_7_R4  .. 1_16_R3           ^= java 8
+// 1_17_R1                      ^= java 16
+// 1_18_R1 .. 1_20_R3           ^= java 17
+// 1_20_R4 .. 1_21_R7, paper    ^= java 21
+// 26_R1   .. 26_R2             ^= java 25
 dependencies {
     implementation project(':api')
     implementation project(':abstraction')
@@ -129,6 +130,15 @@ dependencies {
     implementation project(':NMS:1_20_R2')
     implementation project(':NMS:1_20_R3')
     implementation project(':NMS:1_20_R4')
+    implementation project(':NMS:1_21_R1')
+    implementation project(':NMS:1_21_R2')
+    implementation project(':NMS:1_21_R3')
+    implementation project(':NMS:1_21_R4')
+    implementation project(':NMS:1_21_R5')
+    implementation project(':NMS:1_21_R6')
+    implementation project(':NMS:1_21_R7')
+    implementation project(':NMS:26_R1')
+    implementation project(':NMS:26_R2')
     implementation project(':NMS:paper')
 }
 

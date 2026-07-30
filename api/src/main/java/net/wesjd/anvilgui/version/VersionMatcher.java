@@ -1,5 +1,7 @@
 package net.wesjd.anvilgui.version;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Bukkit;
 
 /**
@@ -9,6 +11,36 @@ import org.bukkit.Bukkit;
  * @since 1.2.1
  */
 public class VersionMatcher {
+    /** Maps a Minecraft version string to the corresponding revision string */
+    private static final Map<String, String> VERSION_TO_REVISION = new HashMap<String, String>() {
+        {
+            this.put("1.20", "1_20_R1");
+            this.put("1.20.1", "1_20_R1");
+            this.put("1.20.2", "1_20_R2");
+            this.put("1.20.3", "1_20_R3");
+            this.put("1.20.4", "1_20_R3");
+            this.put("1.20.5", "1_20_R4");
+            this.put("1.20.6", "1_20_R4");
+            this.put("1.21", "1_21_R1");
+            this.put("1.21.1", "1_21_R1");
+            this.put("1.21.2", "1_21_R2");
+            this.put("1.21.3", "1_21_R2");
+            this.put("1.21.4", "1_21_R3");
+            this.put("1.21.5", "1_21_R4");
+            this.put("1.21.6", "1_21_R5");
+            this.put("1.21.7", "1_21_R5");
+            this.put("1.21.8", "1_21_R5");
+            this.put("1.21.9", "1_21_R6");
+            this.put("1.21.10", "1_21_R6");
+            this.put("1.21.11", "1_21_R7");
+            this.put("26.1", "26_R1");
+            this.put("26.1.1", "26_R1");
+            this.put("26.1.2", "26_R1");
+            this.put("26.2", "26_R2");
+        }
+    };
+    /* This needs to be updated to reflect the newest available version wrapper */
+    private static final String FALLBACK_REVISION = "26_R2";
 
     /**
      * Matches the server version to it's {@link VersionWrapper}

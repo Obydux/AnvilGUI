@@ -801,6 +801,7 @@ public class AnvilGUI {
          * @return An {@link Response} object for when the anvil GUI is to display text to the user
          * @deprecated Since 1.6.2, use {@link ResponseAction#close()}
          */
+        @Deprecated
         public static List<ResponseAction> close() {
             return Arrays.asList(ResponseAction.close());
         }
@@ -812,6 +813,7 @@ public class AnvilGUI {
          * @return A list containing the {@link ResponseAction} for legacy compat
          * @deprecated Since 1.6.2, use {@link ResponseAction#replaceInputText(String)}
          */
+        @Deprecated
         public static List<ResponseAction> text(String text) {
             return Arrays.asList(ResponseAction.replaceInputText(text));
         }
@@ -823,6 +825,7 @@ public class AnvilGUI {
          * @return A list containing the {@link ResponseAction} for legacy compat
          * @deprecated Since 1.6.2, use {@link ResponseAction#openInventory(Inventory)}
          */
+        @Deprecated
         public static List<ResponseAction> openInventory(Inventory inventory) {
             return Arrays.asList(ResponseAction.openInventory(inventory));
         }
